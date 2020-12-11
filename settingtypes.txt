@@ -1,0 +1,2 @@
+autorefill (AutoRefill) bool false
+autoeject (AutoEject) bool false
