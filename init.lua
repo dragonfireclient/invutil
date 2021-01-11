@@ -1,10 +1,15 @@
+local etime = 0
+
 minetest.register_globalstep(function(dtime)
 	local player = minetest.localplayer
 	if not player then return end
 	local item = player:get_wielded_item()
-	local itemdef = minetest.get_item_def(item:get_name())
+	local itemname = item:get_name()
+	local itemdef = minetest.get_item_def(itemname)
 	local wieldindex = player:get_wield_index()
-	if minetest.settings:get_bool("autorefill") and itemdef then
+	etime = etime + dtime
+	if minetest.settings:get_bool("autorefill") and itemname ~= "" and itemdef and etime > 0.1 then
+		etime = 0
 		local space = item:get_free_space()
 		local i = minetest.find_item(item:get_name(), wieldindex + 1)
 		if i and space > 0 then
@@ -28,7 +33,7 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
-minetest.register_list_command("eject", "Configure AutoEject", "eject_items") 
+minetest.register_list_command("eject", "Configure AutoEject", "eject_items")
 
 minetest.register_cheat("AutoRefill", "Inventory", "autorefill")
 minetest.register_cheat("AutoEject", "Inventory", "autoeject")
